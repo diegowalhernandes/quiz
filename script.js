@@ -119,3 +119,23 @@ document.getElementById("endScreen").style.display="none"
 document.getElementById("startScreen").style.display="block"
 
 }
+
+function loadQuestion() {
+  const q = perguntasJogo[perguntaAtual];
+
+  document.getElementById("question").innerText = q.pergunta;
+  document.getElementById("progress").innerText = "Pergunta " + (perguntaAtual + 1) + " de 15";
+
+  const answers = document.getElementById("answers");
+  answers.innerHTML = "";
+
+  // ✅ Embaralha uma cópia das opções sem modificar o original
+  const opcosEmbaralhadas = shuffle([...q.opcoes]);
+
+  opcosEmbaralhadas.forEach(opcao => {
+    const btn = document.createElement("button");
+    btn.innerText = opcao;
+    btn.onclick = () => checkAnswer(btn, opcao, q.resposta);
+    answers.appendChild(btn);
+  });
+}
