@@ -4,10 +4,12 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 let perguntasJogo = []
 let perguntaAtual = 0
 let pontos = 0
+let acertos = 0
+let erros = 0
+let respondida = false
 
 const premios = [100, 200, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 750000, 1000000]
 
-// ── Embaralhamento Fisher-Yates (sem viés estatístico) ──
 function shuffle(array) {
   const arr = [...array]
   for (let i = arr.length - 1; i > 0; i--) {
@@ -17,9 +19,21 @@ function shuffle(array) {
   return arr
 }
 
-// ── Busca perguntas do Supabase ──
-async function startGame() {
+function updateProgressBar() {
+  const pct = Math.round((perguntaAtual / 15) * 100)
+  document.getElementById("progressBar").style.width = pct + "%"
+  document.getElementById("progressPct").innerText = pct + "%"
+  document.getElementById("progress").innerText = "Pergunta " + (perguntaAtual + 1) + " de 15"
+}
 
+function bumpCard(id) {
+  const card = document.getElementById(id)
+  card.classList.remove("bump")
+  void card.offsetWidth // force reflow
+  card.classList.add("bump")
+}
+
+async function startGame() {
   document.getElementById("startScreen").style.display = "none"
   document.getElementById("gameScreen").style.display = "block"
   document.getElementById("question").innerText = "Carregando perguntas..."
@@ -36,24 +50,24 @@ async function startGame() {
     if (!response.ok) throw new Error("Erro ao buscar perguntas")
 
     const data = await response.json()
-    console.log("Dados recebidos:", data)
-    console.log("Total:", data.length)
 
-    const facil   = data.filter(q => q.dificuldade === "facil")
-    const medio   = data.filter(q => q.dificuldade === "medio")
-    const dificil = data.filter(q => q.dificuldade === "dificil")
-
-
-  perguntasJogo = shuffle(data).slice(0, 15).map(q => ({
-    pergunta: q.pergunta,
-    resposta: q.resposta,
-    opcoes: [q.opcao_a, q.opcao_b, q.opcao_c, q.opcao_d]
-  }))
+    perguntasJogo = shuffle(data).slice(0, 15).map(q => ({
+      pergunta: q.pergunta,
+      resposta: q.resposta,
+      opcoes: [q.opcao_a, q.opcao_b, q.opcao_c, q.opcao_d]
+    }))
 
     perguntaAtual = 0
     pontos = 0
-    document.getElementById("score").innerText = "Pontos: 0"
+    acertos = 0
+    erros = 0
+    respondida = false
 
+    document.getElementById("score").innerText = "Pontos: 0"
+    document.getElementById("countAcertos").innerText = "0"
+    document.getElementById("countErros").innerText = "0"
+
+    updateProgressBar()
     loadQuestion()
 
   } catch (error) {
@@ -62,17 +76,22 @@ async function startGame() {
   }
 }
 
-// ── Carrega a pergunta atual ──
 function loadQuestion() {
+  respondida = false
   const q = perguntasJogo[perguntaAtual]
 
-  document.getElementById("question").innerText = q.pergunta
-  document.getElementById("progress").innerText = "Pergunta " + (perguntaAtual + 1) + " de 15"
+  const questionEl = document.getElementById("question")
+  questionEl.innerText = q.pergunta
+  questionEl.className = ""
+
+  updateProgressBar()
 
   const answers = document.getElementById("answers")
   answers.innerHTML = ""
 
-  // Embaralha as opções a cada pergunta
+  const nextBtn = document.getElementById("nextBtn")
+  nextBtn.style.display = "none"
+
   const opcosEmbaralhadas = shuffle(q.opcoes)
 
   opcosEmbaralhadas.forEach(opcao => {
@@ -83,54 +102,97 @@ function loadQuestion() {
   })
 }
 
-// ── Verifica resposta ──
 function checkAnswer(btn, opcao, resposta) {
+  if (respondida) return
+  respondida = true
+
   const buttons = document.querySelectorAll("#answers button")
   buttons.forEach(b => b.disabled = true)
 
+  const questionEl = document.getElementById("question")
+
   if (opcao === resposta) {
     btn.classList.add("correct")
-    pontos = premios[perguntaAtual]
+    questionEl.classList.add("correct-q")
+    acertos++
+    pontos += premios[perguntaAtual]
     document.getElementById("score").innerText = "Pontos: " + pontos.toLocaleString("pt-BR")
-
-    setTimeout(() => {
-      perguntaAtual++
-      if (perguntaAtual >= 15) {
-        winGame()
-      } else {
-        loadQuestion()
-      }
-    }, 800)
-
+    document.getElementById("countAcertos").innerText = acertos
+    bumpCard("cardAcertos")
   } else {
     btn.classList.add("wrong")
+    questionEl.classList.add("wrong-q")
     buttons.forEach(b => {
       if (b.innerText === resposta) b.classList.add("correct")
     })
-    setTimeout(endGame, 1200)
+    erros++
+    document.getElementById("countErros").innerText = erros
+    bumpCard("cardErros")
+  }
+
+  // Última pergunta: botão vira "Ver resultado"
+  const nextBtn = document.getElementById("nextBtn")
+  if (perguntaAtual >= 14) {
+    nextBtn.innerText = "Ver resultado 🏁"
+  } else {
+    nextBtn.innerText = "Próxima ➜"
+  }
+  nextBtn.style.display = "block"
+}
+
+function nextQuestion() {
+  perguntaAtual++
+  if (perguntaAtual >= 15) {
+    finishGame()
+  } else {
+    loadQuestion()
   }
 }
 
-// ── Tela de vitória ──
-function winGame() {
+function finishGame() {
+  // Atualiza barra para 100%
+  document.getElementById("progressBar").style.width = "100%"
+  document.getElementById("progressPct").innerText = "100%"
+
   document.getElementById("gameScreen").style.display = "none"
   document.getElementById("endScreen").style.display = "block"
-  document.getElementById("finalMessage").innerText = "🏆 Você ganhou 1 milhão!"
-  document.getElementById("finalScore").innerText = "Pontuação: R$ " + pontos.toLocaleString("pt-BR")
+
+  document.getElementById("finalAcertos").innerText = acertos
+  document.getElementById("finalErros").innerText = erros
+
+  const pct = Math.round((acertos / 15) * 100)
+
+  let emoji = ""
+  let msg = ""
+  let performance = ""
+
+  if (pct === 100) {
+    emoji = "🏆"; msg = "Perfeito! Você acertou tudo!"
+    performance = "Incrível! Aproveitamento de 100%!"
+  } else if (pct >= 80) {
+    emoji = "🌟"; msg = "Muito bem!"
+    performance = `Aproveitamento de ${pct}% — Excelente!`
+  } else if (pct >= 60) {
+    emoji = "😊"; msg = "Bom resultado!"
+    performance = `Aproveitamento de ${pct}% — Continue assim!`
+  } else if (pct >= 40) {
+    emoji = "🤔"; msg = "Pode melhorar!"
+    performance = `Aproveitamento de ${pct}% — Tente novamente!`
+  } else {
+    emoji = "💪"; msg = "Não desanime!"
+    performance = `Aproveitamento de ${pct}% — A prática leva à perfeição!`
+  }
+
+  document.getElementById("finalMessage").innerText = emoji + " " + msg
+  document.getElementById("finalScore").innerText = "Pontuação: " + pontos.toLocaleString("pt-BR")
+  document.getElementById("performanceMsg").innerText = performance
 }
 
-// ── Tela de derrota ──
-function endGame() {
-  document.getElementById("gameScreen").style.display = "none"
-  document.getElementById("endScreen").style.display = "block"
-  document.getElementById("finalMessage").innerText = "❌ Fim de jogo"
-  document.getElementById("finalScore").innerText = "Você ganhou: R$ " + pontos.toLocaleString("pt-BR")
-}
-
-// ── Reiniciar ──
 function restartGame() {
   perguntaAtual = 0
   pontos = 0
+  acertos = 0
+  erros = 0
   document.getElementById("endScreen").style.display = "none"
   document.getElementById("startScreen").style.display = "block"
 }

@@ -2,39 +2,87 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz do Conhecimento</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
 </head>
 
 <body>
-
 <div class="container">
 
-<div id="startScreen">
-<h1>🎮 Quiz do Conhecimento</h1>
-<button onclick="startGame()">Começar</button>
+  <!-- TELA INICIAL -->
+  <div id="startScreen">
+    <h1>Quiz do Conhecimento</h1>
+    <p class="start-description">Responda 15 perguntas e veja quantas você acerta!<br>Você avança mesmo errando. 😄</p>
+    <button class="main-btn" onclick="startGame()">🚀 Começar</button>
+  </div>
+
+  <!-- TELA DO JOGO -->
+  <div id="gameScreen" style="display:none">
+
+    <div id="score">Pontos: 0</div>
+
+    <!-- Placar acertos/erros -->
+    <div class="scoreboard">
+      <div class="score-card acertos" id="cardAcertos">
+        <span class="icon">✅</span>
+        <div class="score-card-inner">
+          <span class="label">Acertos</span>
+          <span class="count" id="countAcertos">0</span>
+        </div>
+      </div>
+      <div class="score-card erros" id="cardErros">
+        <span class="icon">❌</span>
+        <div class="score-card-inner">
+          <span class="label">Erros</span>
+          <span class="count" id="countErros">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de progresso -->
+    <div class="progress-wrapper">
+      <div class="progress-header">
+        <span id="progress">Pergunta 1 de 15</span>
+        <span id="progressPct" style="font-size:0.85rem;font-weight:700;color:var(--cor-roxo)">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+    </div>
+
+    <h2 id="question"></h2>
+    <div id="answers"></div>
+    <button id="nextBtn" onclick="nextQuestion()">Próxima ➜</button>
+
+  </div>
+
+  <!-- TELA FINAL -->
+  <div id="endScreen" style="display:none">
+    <h1 id="finalMessage"></h1>
+
+    <div class="result-summary">
+      <div class="result-card acertos">
+        <span class="r-icon">✅</span>
+        <span class="r-count" id="finalAcertos">0</span>
+        <span class="r-label">Acertos</span>
+      </div>
+      <div class="result-card erros">
+        <span class="r-icon">❌</span>
+        <span class="r-count" id="finalErros">0</span>
+        <span class="r-label">Erros</span>
+      </div>
+    </div>
+
+    <p id="finalScore"></p>
+    <p class="performance-msg" id="performanceMsg"></p>
+    <button class="main-btn" onclick="restartGame()">🔄 Jogar novamente</button>
+  </div>
+
 </div>
 
-<div id="gameScreen" style="display:none">
-
-<div id="score">Pontos: 0</div>
-<div id="progress"></div>
-
-<h2 id="question"></h2>
-
-<div id="answers"></div>
-
-</div>
-
-<div id="endScreen" style="display:none">
-<h1 id="finalMessage"></h1>
-<p id="finalScore"></p>
-<button onclick="restartGame()">Jogar novamente</button>
-</div>
-
-</div>
-
-<script src="script.js"></script>
 
 </body>
 </html>

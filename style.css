@@ -1,6 +1,3 @@
-/* ===== GOOGLE FONTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
-
 /* ===== VARIÁVEIS ===== */
 :root {
   --cor-fundo: #fff9f0;
@@ -15,14 +12,8 @@
   --raio: 20px;
 }
 
-/* ===== RESET ===== */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ===== BASE ===== */
 body {
   font-family: 'Nunito', sans-serif;
   background-color: var(--cor-fundo);
@@ -37,7 +28,6 @@ body {
   padding: 16px;
 }
 
-/* ===== CONTAINER ===== */
 .container {
   background: #ffffff;
   border-radius: var(--raio);
@@ -60,66 +50,192 @@ body {
   letter-spacing: 1px;
 }
 
-#startScreen h1::before {
-  content: "🎮 ";
+.start-description {
+  color: var(--cor-texto-claro);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
-/* ===== PONTOS E PROGRESSO ===== */
-#score {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.4rem;
-  color: #fff;
-  background: linear-gradient(135deg, var(--cor-roxo), var(--cor-primaria));
-  padding: 10px 20px;
-  border-radius: 50px;
-  display: inline-block;
-  margin-bottom: 12px;
-  box-shadow: var(--sombra);
-  letter-spacing: 0.5px;
+/* ===== BARRA DE PROGRESSO ===== */
+.progress-wrapper {
+  margin-bottom: 16px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 #progress {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--cor-texto-claro);
-  margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 12px;
+  background: #f0e8ff;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, var(--cor-roxo), var(--cor-primaria));
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ===== PLACAR DE ACERTOS/ERROS ===== */
+.scoreboard {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+
+.score-card {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.score-card.acertos {
+  background: linear-gradient(135deg, #d4fce8, #b8f5d6);
+  border: 2px solid #06d6a090;
+  color: #065f46;
+}
+
+.score-card.erros {
+  background: linear-gradient(135deg, #ffe4e4, #ffc8c8);
+  border: 2px solid #ff4d6d90;
+  color: #9b1c1c;
+}
+
+.score-card .icon {
+  font-size: 1.2rem;
+}
+
+.score-card .label {
+  font-size: 0.7rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.score-card .count {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.score-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.score-card.bump {
+  animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* ===== PONTOS ===== */
+#score {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--cor-roxo), var(--cor-primaria));
+  padding: 8px 20px;
+  border-radius: 50px;
+  display: inline-block;
+  margin-bottom: 14px;
+  box-shadow: var(--sombra);
+  letter-spacing: 0.5px;
 }
 
 /* ===== PERGUNTA ===== */
 #question {
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(1.2rem, 5vw, 1.55rem);
+  font-size: clamp(1.15rem, 5vw, 1.45rem);
   color: var(--cor-texto);
   background: linear-gradient(135deg, #fff9f0, #fff0fa);
   border: 3px solid #ffd6e7;
   border-radius: var(--raio);
   padding: 20px 18px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   line-height: 1.4;
   min-height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color 0.3s;
+}
+
+#question.correct-q {
+  border-color: var(--cor-verde);
+  background: linear-gradient(135deg, #f0fff8, #e0fff4);
+}
+
+#question.wrong-q {
+  border-color: var(--cor-primaria);
+  background: linear-gradient(135deg, #fff5f5, #ffe8e8);
 }
 
 /* ===== RESPOSTAS ===== */
 #answers {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 #answers button {
   width: 100%;
-  padding: 16px 20px;
+  padding: 15px 20px;
   border: 3px solid transparent;
   border-radius: var(--raio);
   background: linear-gradient(135deg, #f0f4ff, #f8f0ff);
   border-color: #c8b6ff;
   font-family: 'Nunito', sans-serif;
-  font-size: clamp(1rem, 4vw, 1.1rem);
+  font-size: clamp(0.95rem, 4vw, 1.05rem);
   font-weight: 800;
   color: var(--cor-roxo);
   cursor: pointer;
@@ -127,7 +243,7 @@ body {
   box-shadow: 0 4px 0px #c8b6ff;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   line-height: 1.3;
-  min-height: 56px;
+  min-height: 54px;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -142,11 +258,8 @@ body {
   box-shadow: 0 2px 0px #c8b6ff;
 }
 
-#answers button:disabled {
-  cursor: default;
-}
+#answers button:disabled { cursor: default; }
 
-/* ===== FEEDBACK CORRETO / ERRADO ===== */
 .correct {
   background: linear-gradient(135deg, #d4fce8, #b8f5d6) !important;
   border-color: var(--cor-verde) !important;
@@ -161,8 +274,37 @@ body {
   box-shadow: 0 4px 0px #ff4d6d90 !important;
 }
 
-/* ===== BOTÃO PRINCIPAL ===== */
-button {
+/* ===== BOTÃO PRÓXIMA ===== */
+#nextBtn {
+  display: none;
+  width: 100%;
+  padding: 16px;
+  margin-top: 14px;
+  border: none;
+  border-radius: var(--raio);
+  background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-primaria));
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.1rem, 5vw, 1.25rem);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 0px #c0392b50;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  letter-spacing: 0.5px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#nextBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0px #c0392b50;
+}
+
+#nextBtn:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0px #c0392b50;
+}
+
+/* ===== BOTÃO PRINCIPAL (start/restart) ===== */
+.main-btn {
   width: 100%;
   padding: 18px;
   margin: 12px 0 0;
@@ -179,15 +321,8 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 9px 0px #c0392b50;
-}
-
-button:active {
-  transform: translateY(3px);
-  box-shadow: 0 3px 0px #c0392b50;
-}
+.main-btn:hover { transform: translateY(-3px); box-shadow: 0 9px 0px #c0392b50; }
+.main-btn:active { transform: translateY(3px); box-shadow: 0 3px 0px #c0392b50; }
 
 /* ===== TELA FINAL ===== */
 #endScreen h1 {
@@ -198,25 +333,55 @@ button:active {
   text-shadow: 2px 2px 0px #c8b6ff;
 }
 
+.result-summary {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+  justify-content: center;
+}
+
+.result-card {
+  flex: 1;
+  padding: 16px 10px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.result-card.acertos {
+  background: linear-gradient(135deg, #d4fce8, #b8f5d6);
+  border: 2px solid #06d6a090;
+  color: #065f46;
+}
+
+.result-card.erros {
+  background: linear-gradient(135deg, #ffe4e4, #ffc8c8);
+  border: 2px solid #ff4d6d90;
+  color: #9b1c1c;
+}
+
+.result-card .r-icon { font-size: 1.8rem; }
+.result-card .r-count { font-family: 'Fredoka One', cursive; font-size: 2rem; line-height: 1; }
+.result-card .r-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+
 #finalScore {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: var(--cor-secundaria);
   margin-bottom: 8px;
 }
 
-/* ===== RESPONSIVO TABLET+ ===== */
+.performance-msg {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cor-texto-claro);
+  margin-bottom: 4px;
+}
+
 @media (min-width: 480px) {
-  body {
-    align-items: center;
-    padding: 24px;
-  }
-
-  .container {
-    padding: 36px 32px 40px;
-  }
-
-  #answers button {
-    min-height: 60px;
-  }
+  body { align-items: center; padding: 24px; }
+  .container { padding: 36px 32px 40px; }
+  #answers button { min-height: 58px; }
 }
