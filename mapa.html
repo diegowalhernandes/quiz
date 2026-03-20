@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Mapa de Fases</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="mapa.css">
+</head>
+<body>
+<div class="mapa-container">
+
+  <!-- Header -->
+  <div class="mapa-header">
+    <button class="btn-voltar" onclick="window.location.href='index.html'">← Voltar</button>
+    <div class="mapa-header-center">
+      <h1 class="mapa-titulo">🗺️ Mapa de Mundos</h1>
+      <div class="xp-total-badge">⭐ <span id="xpTotalGlobal">0</span> XP total</div>
+    </div>
+    <button class="btn-reset" onclick="resetProgress()" title="Resetar progresso">🗑️</button>
+  </div>
+
+  <!-- Mundos -->
+  <div id="mundosContainer" class="mundos-container"></div>
+
+</div>
+
+<script src="mapa.js"></script>
+</body>
+</html>

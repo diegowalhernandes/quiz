@@ -440,3 +440,84 @@ body {
   .ajuda-btn { padding: 12px 10px; }
   .ajuda-btn .ajuda-icon { font-size: 1.5rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   ADIÇÕES AO style.css — Sistema de Fases
+   Cole estes estilos no FINAL do seu style.css existente
+═══════════════════════════════════════════════════════════ */
+
+/* Badge da fase no topo do jogo */
+.fase-badge {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--cor-roxo, #7c3aed);
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 99px;
+  padding: 0.3rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* XP disponível por pergunta */
+.xp-disponivel {
+  text-align: center;
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+.xp-disponivel strong {
+  color: #f59e0b;
+}
+
+/* Popup flutuante de XP ganho */
+.xp-popup {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #22c55e;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.3rem;
+  padding: 0.5rem 1.4rem;
+  border-radius: 99px;
+  box-shadow: 0 4px 20px rgba(34,197,94,0.4);
+  animation: xpFadeUp 1.2s ease forwards;
+  pointer-events: none;
+  z-index: 999;
+}
+
+@keyframes xpFadeUp {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-60px); }
+}
+
+/* Botões agrupados na tela inicial e final */
+.start-buttons,
+.end-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* Botão secundário (mapa) */
+.map-btn {
+  background: transparent;
+  border: 2px solid var(--cor-roxo, #7c3aed);
+  color: var(--cor-roxo, #7c3aed);
+  border-radius: 12px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.map-btn:hover {
+  background: var(--cor-roxo, #7c3aed);
+  color: #fff;
+}

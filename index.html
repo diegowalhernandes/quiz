@@ -16,24 +16,29 @@
   <div id="startScreen">
     <h1>Quiz do Conhecimento</h1>
     <p class="start-description">
-      Responda 15 perguntas e acumule o máximo de XP!<br>
+      Explore os mundos, complete fases e acumule XP!<br>
       Você avança mesmo errando. 😄
     </p>
 
-    <!-- Preview das ajudas disponíveis -->
     <div class="ajudas-preview">
       <span class="ajuda-chip">🔥 Eliminar 2</span>
       <span class="ajuda-chip">⏭️ Pular</span>
       <span class="ajuda-chip">💡 Dica IA</span>
     </div>
 
-    <button class="main-btn" onclick="startGame()">🚀 Começar</button>
+    <div class="start-buttons">
+      <button class="main-btn" onclick="startGame()">🚀 Começar</button>
+      <button class="map-btn" onclick="window.location.href='mapa.html'">🗺️ Ver Mapa de Fases</button>
+    </div>
   </div>
 
   <!-- ══════════════════════════════ -->
   <!-- TELA DO JOGO                  -->
   <!-- ══════════════════════════════ -->
   <div id="gameScreen" style="display:none">
+
+    <!-- Badge da fase atual -->
+    <div id="faseBadge" class="fase-badge" style="display:none"></div>
 
     <!-- XP atual -->
     <div id="score">⭐ XP: 0</div>
@@ -59,7 +64,7 @@
     <!-- Barra de progresso -->
     <div class="progress-wrapper">
       <div class="progress-header">
-        <span id="progress">Pergunta 1 de 15</span>
+        <span id="progress">Pergunta 1 de 5</span>
         <span id="progressPct" style="font-size:0.85rem;font-weight:700;color:var(--cor-roxo)">0%</span>
       </div>
       <div class="progress-bar-track">
@@ -76,29 +81,25 @@
     <!-- Respostas -->
     <div id="answers"></div>
 
-    <!-- Caixa da dica (aparece ao usar a ajuda) -->
+    <!-- Caixa da dica -->
     <div id="dicaBox"></div>
 
-    <!-- ── Ajudas ── -->
+    <!-- Ajudas -->
     <div class="ajudas-section">
       <div class="ajudas-label">⚡ Ajudas — 1 uso cada</div>
       <div class="ajudas-row">
-
         <button class="ajuda-btn" id="ajuda-eliminar" onclick="usarEliminar()" title="Elimina 2 respostas erradas">
           <span class="ajuda-icon">🔥</span>
           <span class="ajuda-nome">Eliminar 2</span>
         </button>
-
         <button class="ajuda-btn" id="ajuda-pular" onclick="usarPular()" title="Pula sem contar erro">
           <span class="ajuda-icon">⏭️</span>
           <span class="ajuda-nome">Pular</span>
         </button>
-
         <button class="ajuda-btn" id="ajuda-dica" onclick="usarDica()" title="Gera uma dica">
           <span class="ajuda-icon">💡</span>
           <span class="ajuda-nome">Dica IA</span>
         </button>
-
       </div>
     </div>
 
@@ -113,6 +114,9 @@
   <div id="endScreen" style="display:none">
 
     <h1 id="finalMessage"></h1>
+
+    <!-- Estrelas da fase -->
+    <div id="finalEstrelas" style="display:flex;justify-content:center;gap:0.5rem;margin:0.5rem 0 1rem;"></div>
 
     <div class="result-summary">
       <div class="result-card acertos">
@@ -135,7 +139,11 @@
     <p id="finalXP" style="font-size:1.6rem;font-weight:800;margin:0.5rem 0;"></p>
     <p id="finalNivel" style="font-size:1.1rem;font-weight:600;margin:0.25rem 0;"></p>
     <p class="performance-msg" id="performanceMsg"></p>
-    <button class="main-btn" onclick="restartGame()">🔄 Jogar novamente</button>
+
+    <div class="end-buttons">
+      <button class="main-btn" onclick="restartGame()">🔄 Jogar novamente</button>
+      <button class="map-btn" id="btnVoltarMapa" onclick="voltarMapa()" style="display:none">🗺️ Voltar ao Mapa</button>
+    </div>
 
   </div>
 
